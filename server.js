@@ -722,7 +722,15 @@ app.get('/owner-dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-server.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
-  console.log(`Server maxHeaderSize: ${server.maxHeaderSize}`);
-});
+const port = process.env.PORT || 3001;
+
+// Only start server if not in Vercel environment
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  server.listen(port, () => {
+    console.log(`Server listening at http://localhost:${port}`);
+    console.log(`Server maxHeaderSize: ${server.maxHeaderSize}`);
+  });
+}
+
+// Export for Vercel
+module.exports = app;

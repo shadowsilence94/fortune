@@ -30,10 +30,6 @@ const PaymentPage = ({ language, isDarkMode, user: propUser, onLogout }) => {
       }
     }
   }, [propUser]);
-    if (userData) {
-      setUser(JSON.parse(userData));
-    }
-  }, []);
 
   const plans = [
     {

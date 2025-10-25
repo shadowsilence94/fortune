@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
 import './UserAuth.css';
 
 const UserAuth = ({ onLogin, language, isDarkMode, onClose }) => {
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
@@ -13,6 +15,14 @@ const UserAuth = ({ onLogin, language, isDarkMode, onClose }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      navigate('/');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +44,7 @@ const UserAuth = ({ onLogin, language, isDarkMode, onClose }) => {
       if (data.success) {
         localStorage.setItem('userToken', JSON.stringify(data.user));
         onLogin(data.user);
-        onClose();
+        handleClose();
       } else {
         setError(data.message || 'Authentication failed');
       }
@@ -65,7 +75,7 @@ const UserAuth = ({ onLogin, language, isDarkMode, onClose }) => {
           <div className="auth-header">
             <h2>{isLogin ? 'Login' : 'Create Account'}</h2>
             <p>{isLogin ? 'Welcome back!' : 'Join us for premium features'}</p>
-            <button className="close-button" onClick={onClose}>×</button>
+            <button className="close-button" onClick={handleClose} type="button">×</button>
           </div>
 
           <form onSubmit={handleSubmit} className="auth-form">

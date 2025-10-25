@@ -9,12 +9,9 @@ import {
   Users, 
   Clock,
   TrendingUp,
-  LogOut,
   RefreshCw,
-  CheckCircle,
   XCircle
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { translations } from '../translations';
 import './OwnerDashboard.css';
 

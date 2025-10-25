@@ -1,10 +1,12 @@
 body {
   margin: 0;
-  font-family: 'Laila', serif; /* Default font */
+  font-family: 'Padauk', 'Myanmar Text', 'Pyidaungsu', 'Laila', serif; /* Myanmar font support */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #121212;
   color: #f0e6d2;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 code {

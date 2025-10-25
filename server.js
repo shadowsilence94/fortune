@@ -7,7 +7,12 @@ const socketIo = require('socket.io');
 const path = require('path');
 
 const app = express();
-const server = http.createServer(app);
+
+// Create server with increased header size
+const server = http.createServer({
+  maxHeaderSize: 16384 // 16KB header size (increased from default 8KB)
+}, app);
+
 const io = socketIo(server, {
   cors: {
     origin: "http://localhost:3000",
@@ -17,9 +22,21 @@ const io = socketIo(server, {
 
 const port = process.env.PORT || 3001;
 
-server.maxHeaderSize = 65536; // Set maxHeaderSize to 64KB
+// CORS middleware with increased limits
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Max-Age', '86400'); // 24 hours
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
 
 app.use(express.json({ limit: '50mb' })); // Increased body limit
+app.use(express.urlencoded({ limit: '50mb', extended: true })); // Add URL encoded support
 app.use(express.static(path.join(__dirname, 'build')));
 
 // Initialize Qwen AI
@@ -185,7 +202,12 @@ ${language === 'my' ? `
 ၄။ လက်တွေ့လိုက်နာရမည့် အကြံပြုချက်များ
 ၅။ ကံကောင်းသော အရာများ၊ ရက်များ၊ အရောင်များ
 
-ရှေးရိုးမြန်မာ ဗေဒင်ဆရာ ပုံစံဖြင့် အပြည့်အစုံ ရေးပါ။ စာလုံး ၄၀၀ ခန့် ရေးပါ။ မပြတ်တောက်ဘဲ ပြည့်စုံစွာ ဖြေကြားပါ။
+အရေးကြီးချက်များ:
+- စာလုံး ၄၀၀ မှ ၅၀၀ ကြား ရေးပါ
+- တူညီသော ဝါကျများ ထပ်ခါတလဲလဲ မရေးပါနှင့်
+- အချက်တိုင်းကို ကွဲပြားစွာ ဖော်ပြပါ
+- ဟောစာကို အစအဆုံး ဆက်စပ်စွာ ရေးပါ
+- စာကြောင်းတိုင်းကို "။" ဖြင့် အဆုံးသတ်ပါ
 ` : `
 Please provide a detailed, mystical, and insightful reading that feels authentic and personal. Include:
 1. General personality traits based on birth details
@@ -195,7 +217,7 @@ Please provide a detailed, mystical, and insightful reading that feels authentic
 5. Lucky elements or suggestions
 
 Please respond in English with a mystical and professional tone.
-Keep the response between 200-400 words.
+Keep the response between 250-450 words. Make sure to complete all sentences properly.
 `}`;
 
         // Try free models first
@@ -210,18 +232,19 @@ Keep the response between 200-400 words.
                 {
                   role: "system",
                   content: language === 'my' 
-                    ? "သင်သည် ဆရာနိုင်ဝင်း ဖြစ်ပြီး မြန်မာနိုင်ငံ၏ ကျွမ်းကျင်သော ဗေဒင်ဆရာ ဖြစ်သည်။ ရှေးရိုးမြန်မာ ဗေဒင်ပညာနှင့် ဟောစာပညာကို နက်နဲစွာ သိရှိသည်။ အပြည့်အစုံ ဖြေကြားပါ။ စာကြောင်းများကို မပြတ်တောက်ဘဲ ပြီးမြောက်အောင် ရေးပါ။"
-                    : "You are Sayar Naing Win, a wise and experienced Myanmar astrologer with deep knowledge of traditional astrology and fortune telling."
+                    ? "သင်သည် ဆရာနိုင်ဝင်း ဖြစ်ပြီး မြန်မာနိုင်ငံ၏ ကျွမ်းကျင်သော ဗေဒင်ဆရာ ဖြစ်သည်။ ရှေးရိုးမြန်မာ ဗေဒင်ပညာနှင့် ဟောစာပညာကို နက်နဲစွာ သိရှိသည်။ တူညီသောစာကြောင်းများကို မထပ်ရေးပါနှင့်။ ကွဲပြားသော အကြောင်းအရာများဖြင့် အပြည့်အစုံ ဖြေကြားပါ။"
+                    : "You are Sayar Naing Win, a wise and experienced Myanmar astrologer with deep knowledge of traditional astrology and fortune telling. Provide varied and detailed insights without repeating the same phrases."
                 },
                 {
                   role: "user",
                   content: prompt
                 }
               ],
-              max_tokens: language === 'my' ? 1200 : 500, // Much higher for Myanmar
-              temperature: 0.6, // Lower for more consistent completion
+              max_tokens: language === 'my' ? 1500 : 500,
+              temperature: 0.8,
               top_p: 0.95,
-              frequency_penalty: 0.1 // Reduce repetition
+              frequency_penalty: 0.8,  // Reduce repetition
+              presence_penalty: 0.6    // Encourage diversity
             });
 
             const prediction = completion.choices[0]?.message?.content;
@@ -231,15 +254,12 @@ Keep the response between 200-400 words.
               console.log('Prediction length:', prediction.length);
               console.log('Language:', language);
               
-              // Check if Myanmar text seems complete (ends with proper punctuation)
+              // For Myanmar text, check if reasonably complete
               if (language === 'my') {
-                const lastChar = prediction.trim().slice(-1);
-                const myanmarPunctuation = ['။', '၊', '၏', '၍', 'သည်', 'ပါသည်', 'ပါ', 'မည်'];
-                const seemsComplete = myanmarPunctuation.some(punct => prediction.trim().endsWith(punct));
-                
-                if (!seemsComplete) {
-                  console.log('⚠️ Myanmar text may be incomplete, trying next model...');
-                  continue; // Try next model if text seems cut off
+                // If text is too short (less than 200 chars), try next model
+                if (prediction.trim().length < 200) {
+                  console.log('⚠️ Myanmar text too short, trying next model...');
+                  continue;
                 }
               }
               
@@ -722,15 +742,14 @@ app.get('/owner-dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
-const port = process.env.PORT || 3001;
-
 // Only start server if not in Vercel environment
-if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+if (!process.env.VERCEL && !process.env.VERCEL_ENV) {
   server.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
-    console.log(`Server maxHeaderSize: ${server.maxHeaderSize}`);
+    console.log(`Server maxHeaderSize: 16KB`);
+    console.log(`Qwen API configured: ${!!process.env.QWEN_API_KEY}`);
   });
 }
 
-// Export for Vercel
+// Export for Vercel and serverless
 module.exports = app;

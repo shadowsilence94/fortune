@@ -174,8 +174,6 @@ const PaymentPage = ({ language, isDarkMode, user: propUser, onLogout }) => {
                   {language === 'en' ? 'Logout' : 'ထွက်ရန်'}
                 </button>
               )}
-            </div>
-          )}
               {user.isPremium && (
                 <div className="premium-status">
                   <Crown size={16} />

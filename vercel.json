@@ -1,5 +1,7 @@
 {
   "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": "build",
   "builds": [
     {
       "src": "package.json",
@@ -9,22 +11,29 @@
       }
     },
     {
-      "src": "server.js",
+      "src": "api/server.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/server.js"
+      "dest": "/api/server.js"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/.*\\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot)",
+      "dest": "/$0"
     },
     {
       "src": "/(.*)",
-      "dest": "/build/index.html"
+      "dest": "/index.html"
     }
   ],
   "env": {
-    "QWEN_API_KEY": "@qwen_api_key",
-    "QWEN_BASE_URL": "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    "NODE_ENV": "production"
   }
 }

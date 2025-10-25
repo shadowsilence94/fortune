@@ -1,70 +1,107 @@
-# Getting Started with Create React App
+# 🔮 Fortune Teller App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+AI-powered fortune telling app with Myanmar (Burmese) and English language support.
 
-## Available Scripts
+## 🚀 Quick Start
 
-In the project directory, you can run:
+```bash
+./quick-start.sh
+```
 
-### `npm start`
+This will:
+- Check environment setup
+- Create necessary config files
+- Start API server (port 3001)
+- Start React app (port 3000)
+- Open browser automatically
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## 📋 Manual Start
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Terminal 1 - API Server
+```bash
+npm run server
+```
 
-### `npm test`
+### Terminal 2 - React App
+```bash
+npm start
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## ⚙️ Configuration
 
-### `npm run build`
+Create `.env` file with:
+```env
+QWEN_API_KEY=your_api_key_here
+QWEN_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1
+PORT=3001
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## ✨ Features
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- 🔮 AI Fortune Telling (English & Myanmar)
+- 💬 Chat with AI Astrologer
+- 📅 Booking System
+- 💳 Payment Integration
+- 👑 Owner Dashboard
+- 🌐 Bilingual Interface
+- 📱 Mobile Responsive
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## 🧪 Testing
 
-### `npm run eject`
+1. Open http://localhost:3000
+2. Switch language to Myanmar (မြန်မာ)
+3. Fill in birth details
+4. Select topic (e.g., အချစ်ရေး - Love)
+5. Click "ဟောစာရယ်မယ်" button
+6. View full Myanmar fortune prediction
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🚀 Deploy to Vercel
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+vercel --prod
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Set environment variables in Vercel Dashboard:
+- `QWEN_API_KEY`
+- `QWEN_BASE_URL`
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 📞 Owner Access
 
-## Learn More
+Dashboard: http://localhost:3000/owner-dashboard
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Username: `naingwin`
+- Password: `naingwinohnmarmyint29A`
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🔧 Troubleshooting
 
-### Code Splitting
+### Port in use
+```bash
+lsof -ti:3000 | xargs kill -9
+lsof -ti:3001 | xargs kill -9
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Reinstall dependencies
+```bash
+rm -rf node_modules package-lock.json
+npm install
+```
 
-### Analyzing the Bundle Size
+## 📝 Technical Details
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- **Frontend**: React 19, Framer Motion
+- **Backend**: Express.js, Node.js
+- **AI**: Qwen API (Alibaba Cloud)
+- **Real-time**: Socket.IO
+- **Deployment**: Vercel-ready
 
-### Making a Progressive Web App
+## 🛠️ Recent Fixes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- ✅ Myanmar text repetition fixed (frequency_penalty: 0.8)
+- ✅ HTTP 431 error resolved (increased header size)
+- ✅ JSX syntax errors fixed
+- ✅ Vercel deployment configured
+- ✅ Myanmar font support added (Padauk)
 
-### Advanced Configuration
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Made with ❤️ by Sayar Naing Win

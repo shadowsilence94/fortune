@@ -425,10 +425,17 @@
 .fortune-text,
 .loading-text,
 .error-text {
-  font-family: 'Laila', serif;
+  font-family: 'Padauk', 'Myanmar Text', 'Pyidaungsu', 'Laila', serif;
   font-size: 1.2rem;
-  line-height: 1.7;
+  line-height: 1.8;
   white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+  -moz-hyphens: auto;
+  hyphens: auto;
+  text-align: left;
+  max-width: 100%;
 }
 
 .homepage.dark .fortune-text,

@@ -9,23 +9,10 @@
     {
       "source": "/api/:path*",
       "destination": "/api/server.js"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/static/(.*)",
-      "dest": "/static/$1"
     },
     {
-      "src": "/.*\\.(css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot|json|map)",
-      "dest": "/$0"
-    },
-    {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }

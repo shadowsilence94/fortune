@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Background from './Background';
 import Navigation from './components/Navigation';
@@ -7,6 +7,7 @@ import HomePage from './components/HomePage';
 import BookingPage from './components/BookingPage';
 import ChatPage from './components/ChatPage';
 import OwnerDashboard from './components/OwnerDashboard';
+import OwnerLogin from './components/OwnerLogin';
 import PaymentPage from './components/PaymentPage';
 import UserAuth from './components/UserAuth';
 
@@ -18,8 +19,27 @@ function App() {
   useEffect(() => {
     document.body.className = isDarkMode ? 'dark-mode' : 'light-mode';
     
-    // Check if user is logged in on every render
+    // Check if user OR owner is logged in
     const checkUser = () => {
+      // First check for owner data
+      const ownerData = localStorage.getItem('ownerData');
+      if (ownerData && ownerData !== 'undefined') {
+        try {
+          const parsedOwner = JSON.parse(ownerData);
+          console.log('=== OWNER LOGGED IN ===');
+          console.log('Owner data:', parsedOwner);
+          if (parsedOwner && parsedOwner.id) {
+            setUser(parsedOwner);
+            return;
+          }
+        } catch (error) {
+          console.log('Error parsing owner data:', error);
+          localStorage.removeItem('ownerData');
+          localStorage.removeItem('ownerToken');
+        }
+      }
+      
+      // Then check for regular user data
       const userData = localStorage.getItem('userData');
       console.log('=== APP.JS USER CHECK ===');
       console.log('localStorage userData:', userData);
@@ -55,7 +75,7 @@ function App() {
     
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
-  }, []);
+  }, [isDarkMode]);
 
   const handleLogin = (userData) => {
     console.log('=== APP.JS LOGIN ===');
@@ -68,6 +88,8 @@ function App() {
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem('userData');
+    localStorage.removeItem('ownerData');
+    localStorage.removeItem('ownerToken');
   };
 
   const toggleLanguage = () => {
@@ -121,12 +143,23 @@ function App() {
               onLogout={handleLogout}
             />
           } />
-          <Route path="/owner-dashboard" element={
-            <OwnerDashboard 
+          <Route path="/owner-login" element={
+            <OwnerLogin 
               language={language}
               isDarkMode={isDarkMode}
-              user={user}
+              onLogin={handleLogin}
             />
+          } />
+          <Route path="/owner-dashboard" element={
+            user?.isOwner ? (
+              <OwnerDashboard 
+                language={language}
+                isDarkMode={isDarkMode}
+                user={user}
+              />
+            ) : (
+              <Navigate to="/owner-login" replace />
+            )
           } />
           <Route path="*" element={
             <HomePage 

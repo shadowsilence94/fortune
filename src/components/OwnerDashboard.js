@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
   Calendar, 
@@ -18,22 +19,41 @@ import { translations } from '../translations';
 import './OwnerDashboard.css';
 
 const OwnerDashboard = ({ language, isDarkMode, user }) => {
+  const navigate = useNavigate();
   const [ownerToken, setOwnerToken] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [users, setUsers] = useState([]);
+  const [authError, setAuthError] = useState(false);
 
   const t = translations[language];
 
   useEffect(() => {
-    if (user?.isOwner) {
-      const token = localStorage.getItem('ownerToken') || 'owner-token-' + Date.now();
+    console.log('=== OWNER DASHBOARD MOUNTED ===');
+    console.log('User prop:', user);
+    
+    if (!user || !user.isOwner) {
+      console.log('User is not owner, redirecting to login...');
+      setAuthError(true);
+      setTimeout(() => {
+        navigate('/owner-login');
+      }, 2000);
+      return;
+    }
+    
+    const token = localStorage.getItem('ownerToken');
+    console.log('Owner token from localStorage:', token);
+    
+    if (token) {
       setOwnerToken(token);
       fetchDashboardData(token);
+    } else {
+      console.log('No owner token found');
+      setAuthError(true);
     }
-  }, [user]);
+  }, [user, navigate]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -132,6 +152,16 @@ const OwnerDashboard = ({ language, isDarkMode, user }) => {
 
   return (
     <div className={`dashboard-page ${isDarkMode ? 'dark' : 'light'}`}>
+      {authError ? (
+        <div className="dashboard-container">
+          <div className="auth-error">
+            <XCircle size={48} className="error-icon" />
+            <h2>Authentication Failed</h2>
+            <p>Please login with owner credentials to access the dashboard.</p>
+            <p>Redirecting to login page...</p>
+          </div>
+        </div>
+      ) : (
       <div className="dashboard-container">
         {/* Header */}
         <div className="dashboard-header">
@@ -275,6 +305,7 @@ const OwnerDashboard = ({ language, isDarkMode, user }) => {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 };

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Crown, User, Lock, Eye, EyeOff } from 'lucide-react';
 import './OwnerLogin.css';
 
 const OwnerLogin = ({ onLogin, language, isDarkMode }) => {
+  const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
     email: '',
     password: ''
@@ -34,10 +36,17 @@ const OwnerLogin = ({ onLogin, language, isDarkMode }) => {
       console.log('Login response data:', data);
 
       if (data.success) {
+        // Store both token and user data
         localStorage.setItem('ownerToken', data.token);
         localStorage.setItem('ownerData', JSON.stringify(data.user));
+        
         console.log('Owner login successful, calling onLogin callback');
-        onLogin(data.user, data.token);
+        onLogin(data.user);
+        
+        // Redirect to dashboard
+        setTimeout(() => {
+          navigate('/owner-dashboard');
+        }, 100);
       } else {
         console.error('Login failed:', data.message);
         setError(data.message || 'Invalid owner credentials');

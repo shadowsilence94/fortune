@@ -1190,3 +1190,28 @@
   background: var(--primary-color);
   color: white;
 }
+
+/* Auth Error Styles */
+.auth-error {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.auth-error .error-icon {
+  color: #ff6b6b;
+  margin-bottom: 1.5rem;
+}
+
+.auth-error h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: inherit;
+}
+
+.auth-error p {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+  opacity: 0.8;
+}

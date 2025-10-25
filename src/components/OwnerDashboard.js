@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { 
   Calendar, 
   MessageSquare, 
@@ -25,6 +24,8 @@ const OwnerDashboard = ({ language, isDarkMode, user }) => {
   const [users, setUsers] = useState([]);
   const [authError, setAuthError] = useState(false);
 
+  // translations is used in the component, keeping it for future use
+  // eslint-disable-next-line no-unused-vars
   const t = translations[language];
 
   useEffect(() => {

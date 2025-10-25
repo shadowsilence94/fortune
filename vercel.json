@@ -1,10 +1,7 @@
 {
-  "version": 2,
-  "framework": "create-react-app",
   "buildCommand": "CI=false npm run build",
   "outputDirectory": "build",
   "installCommand": "npm install",
-  "devCommand": "npm start",
   "env": {
     "DISABLE_ESLINT_PLUGIN": "true",
     "CI": "false"
@@ -13,10 +10,6 @@
     {
       "source": "/api/:path*",
       "destination": "/api/server.js"
-    },
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
     }
   ]
 }
